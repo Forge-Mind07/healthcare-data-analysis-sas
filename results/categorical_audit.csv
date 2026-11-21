@@ -1,0 +1,33 @@
+variable,level,n,percent,expected_level,source
+Gender,Female,27726,49.95675675675676,True,Python reference; SAS execution not verified
+Gender,Male,27774,50.04324324324324,True,Python reference; SAS execution not verified
+Blood Type,A+,6956,12.533333333333333,True,Python reference; SAS execution not verified
+Blood Type,A-,6969,12.556756756756757,True,Python reference; SAS execution not verified
+Blood Type,AB+,6947,12.517117117117117,True,Python reference; SAS execution not verified
+Blood Type,AB-,6945,12.513513513513514,True,Python reference; SAS execution not verified
+Blood Type,B+,6945,12.513513513513514,True,Python reference; SAS execution not verified
+Blood Type,B-,6944,12.511711711711712,True,Python reference; SAS execution not verified
+Blood Type,O+,6917,12.463063063063064,True,Python reference; SAS execution not verified
+Blood Type,O-,6877,12.390990990990991,True,Python reference; SAS execution not verified
+Medical Condition,Arthritis,9308,16.77117117117117,True,Python reference; SAS execution not verified
+Medical Condition,Asthma,9185,16.54954954954955,True,Python reference; SAS execution not verified
+Medical Condition,Cancer,9227,16.625225225225226,True,Python reference; SAS execution not verified
+Medical Condition,Diabetes,9304,16.763963963963963,True,Python reference; SAS execution not verified
+Medical Condition,Hypertension,9245,16.65765765765766,True,Python reference; SAS execution not verified
+Medical Condition,Obesity,9231,16.63243243243243,True,Python reference; SAS execution not verified
+Admission Type,Elective,18655,33.612612612612615,True,Python reference; SAS execution not verified
+Admission Type,Emergency,18269,32.917117117117115,True,Python reference; SAS execution not verified
+Admission Type,Urgent,18576,33.47027027027027,True,Python reference; SAS execution not verified
+Test Results,Abnormal,18627,33.56216216216216,True,Python reference; SAS execution not verified
+Test Results,Inconclusive,18356,33.07387387387387,True,Python reference; SAS execution not verified
+Test Results,Normal,18517,33.36396396396397,True,Python reference; SAS execution not verified
+Medication,Aspirin,11094,19.989189189189187,True,Python reference; SAS execution not verified
+Medication,Ibuprofen,11127,20.048648648648648,True,Python reference; SAS execution not verified
+Medication,Lipitor,11140,20.07207207207207,True,Python reference; SAS execution not verified
+Medication,Paracetamol,11071,19.947747747747748,True,Python reference; SAS execution not verified
+Medication,Penicillin,11068,19.942342342342343,True,Python reference; SAS execution not verified
+Insurance Provider,Aetna,10913,19.663063063063063,True,Python reference; SAS execution not verified
+Insurance Provider,Blue Cross,11059,19.926126126126125,True,Python reference; SAS execution not verified
+Insurance Provider,Cigna,11249,20.268468468468466,True,Python reference; SAS execution not verified
+Insurance Provider,Medicare,11154,20.0972972972973,True,Python reference; SAS execution not verified
+Insurance Provider,UnitedHealthcare,11125,20.045045045045047,True,Python reference; SAS execution not verified

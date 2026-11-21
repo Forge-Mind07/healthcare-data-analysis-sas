@@ -1,0 +1,6 @@
+age_group,n,mean,median,std,minimum,maximum,source
+01 Under 18,116,15.318965517241379,16.0,8.861837220381545,1.0,30.0,Python reference; SAS execution not verified
+02 18 to 34,13458,15.411130925843365,15.0,8.645805923362516,1.0,30.0,Python reference; SAS execution not verified
+03 35 to 49,12131,15.409034704476136,15.0,8.709994495131776,1.0,30.0,Python reference; SAS execution not verified
+04 50 to 64,12266,15.573128974400783,16.0,8.662258660223287,1.0,30.0,Python reference; SAS execution not verified
+05 65 and over,16889,15.580436970809403,16.0,8.636341314814167,1.0,30.0,Python reference; SAS execution not verified

@@ -1,0 +1,21 @@
+# Never commit patient-level source, row-level outputs, credentials, or SAS logs.
+data/*.csv
+data/*.zip
+**/*.sas7bdat
+**/*.sas7bndx
+**/*.log
+results/sas/
+visuals/sas/
+results/*_patient*.csv
+results/*_record*.csv
+.env
+.env.*
+*.pem
+*.key
+__pycache__/
+*.py[cod]
+.venv/
+node_modules/
+.DS_Store
+*.tmp
+*.bak

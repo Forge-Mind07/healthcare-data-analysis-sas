@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "engine": "DuckDB 1.5.5",
+  "numeric_or_label_comparisons": 595,
+  "source_file_sha256": "d8c23c7dddaf0e1f5daf26182eb908c219d28a63bb574377c3ba6cb09be8a342",
+  "relative_tolerance": 1e-11,
+  "absolute_tolerance": 1e-07,
+  "method": "Independent read_csv(all_varchar), SELECT DISTINCT, casts, date arithmetic and grouped SQL",
+  "sas_execution_status": "NOT EXECUTED"
+}

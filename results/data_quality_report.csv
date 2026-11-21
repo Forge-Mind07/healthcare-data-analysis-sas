@@ -1,0 +1,16 @@
+check,raw_affected,unique_affected,duplicate_overlap,source
+any_missing,0,0,0,Python reference; SAS execution not verified
+invalid_age,0,0,0,Python reference; SAS execution not verified
+missing_or_invalid_billing,0,0,0,Python reference; SAS execution not verified
+negative_billing,108,106,2,Python reference; SAS execution not verified
+invalid_admission_date,0,0,0,Python reference; SAS execution not verified
+invalid_discharge_date,0,0,0,Python reference; SAS execution not verified
+invalid_stay,0,0,0,Python reference; SAS execution not verified
+zero_day_stay,0,0,0,Python reference; SAS execution not verified
+long_stay_review,0,0,0,Python reference; SAS execution not verified
+missing_critical_category,0,0,0,Python reference; SAS execution not verified
+unexpected_category,0,0,0,Python reference; SAS execution not verified
+original_observations,55500,54966,534,Python reference; SAS execution not verified
+exact_duplicates,534,0,534,Python reference; SAS execution not verified
+excluded_unique_records,0,106,0,Python reference; SAS execution not verified
+cleaned_observations,0,54860,0,Python reference; SAS execution not verified

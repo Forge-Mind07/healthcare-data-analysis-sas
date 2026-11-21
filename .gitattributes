@@ -1,0 +1,8 @@
+*.sas text eol=lf linguist-language=SAS
+*.md text eol=lf
+*.csv text eol=lf
+*.png binary
+# SAS is the analytical deliverable. Auxiliary reference/QA code is visible in
+# the repository but excluded from the GitHub primary-language calculation.
+validation/** linguist-detectable=false
+tests/** linguist-detectable=false

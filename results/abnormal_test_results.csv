@@ -1,0 +1,7 @@
+condition,abnormal_n,denominator_n,abnormal_percent,source
+Arthritis,3153,9207,34.245682632779406,Python reference; SAS execution not verified
+Asthma,2972,9077,32.742095405971135,Python reference; SAS execution not verified
+Cancer,3081,9121,33.779190878193184,Python reference; SAS execution not verified
+Diabetes,3124,9197,33.96759812982494,Python reference; SAS execution not verified
+Hypertension,2970,9131,32.5265578797503,Python reference; SAS execution not verified
+Obesity,3099,9127,33.954201818779445,Python reference; SAS execution not verified

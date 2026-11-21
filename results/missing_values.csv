@@ -1,0 +1,16 @@
+variable,missing_n,denominator,source
+Name,0,55500,Python reference; SAS execution not verified
+Age,0,55500,Python reference; SAS execution not verified
+Gender,0,55500,Python reference; SAS execution not verified
+Blood Type,0,55500,Python reference; SAS execution not verified
+Medical Condition,0,55500,Python reference; SAS execution not verified
+Date of Admission,0,55500,Python reference; SAS execution not verified
+Doctor,0,55500,Python reference; SAS execution not verified
+Hospital,0,55500,Python reference; SAS execution not verified
+Insurance Provider,0,55500,Python reference; SAS execution not verified
+Billing Amount,0,55500,Python reference; SAS execution not verified
+Room Number,0,55500,Python reference; SAS execution not verified
+Admission Type,0,55500,Python reference; SAS execution not verified
+Discharge Date,0,55500,Python reference; SAS execution not verified
+Medication,0,55500,Python reference; SAS execution not verified
+Test Results,0,55500,Python reference; SAS execution not verified

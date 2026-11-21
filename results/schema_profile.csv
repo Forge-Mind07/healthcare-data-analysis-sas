@@ -1,0 +1,16 @@
+original_name,sas_name,staging_type,max_utf8_bytes,distinct_n,source
+Name,Name,character,28,49992,Python reference; SAS execution not verified
+Age,Age,character,2,77,Python reference; SAS execution not verified
+Gender,Gender,character,6,2,Python reference; SAS execution not verified
+Blood Type,Blood_Type,character,3,8,Python reference; SAS execution not verified
+Medical Condition,Medical_Condition,character,12,6,Python reference; SAS execution not verified
+Date of Admission,Date_of_Admission,character,10,1827,Python reference; SAS execution not verified
+Doctor,Doctor,character,28,40341,Python reference; SAS execution not verified
+Hospital,Hospital,character,35,39876,Python reference; SAS execution not verified
+Insurance Provider,Insurance_Provider,character,16,5,Python reference; SAS execution not verified
+Billing Amount,Billing_Amount,character,19,50000,Python reference; SAS execution not verified
+Room Number,Room_Number,character,3,400,Python reference; SAS execution not verified
+Admission Type,Admission_Type,character,9,3,Python reference; SAS execution not verified
+Discharge Date,Discharge_Date,character,10,1856,Python reference; SAS execution not verified
+Medication,Medication,character,11,5,Python reference; SAS execution not verified
+Test Results,Test_Results,character,12,3,Python reference; SAS execution not verified

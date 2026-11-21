@@ -1,0 +1,8 @@
+{
+  "name": "healthcare-sas-reference-charts",
+  "private": true,
+  "description": "Optional reference PNG charts; does not execute SAS",
+  "type": "module",
+  "dependencies": {"echarts": "6.1.0", "sharp": "0.35.5"},
+  "scripts": {"charts": "node render_reference_charts.mjs"}
+}

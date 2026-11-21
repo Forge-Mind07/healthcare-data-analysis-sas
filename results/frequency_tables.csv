@@ -1,0 +1,18 @@
+variable,level,n,percent,source
+condition,Arthritis,9207,16.782719650018226,Python reference; SAS execution not verified
+condition,Asthma,9077,16.54575282537368,Python reference; SAS execution not verified
+condition,Cancer,9121,16.62595698140722,Python reference; SAS execution not verified
+condition,Diabetes,9197,16.764491432737877,Python reference; SAS execution not verified
+condition,Hypertension,9131,16.64418519868757,Python reference; SAS execution not verified
+condition,Obesity,9127,16.636893911775427,Python reference; SAS execution not verified
+admission_type,Elective,18437,33.60736419978126,Python reference; SAS execution not verified
+admission_type,Emergency,18070,32.93838862559242,Python reference; SAS execution not verified
+admission_type,Urgent,18353,33.454247174626325,Python reference; SAS execution not verified
+test_result,Abnormal,18399,33.53809697411593,Python reference; SAS execution not verified
+test_result,Inconclusive,18159,33.100619759387534,Python reference; SAS execution not verified
+test_result,Normal,18302,33.361283266496535,Python reference; SAS execution not verified
+age_group,01 Under 18,116,0.2114473204520598,Python reference; SAS execution not verified
+age_group,02 18 to 34,13458,24.531534815895007,Python reference; SAS execution not verified
+age_group,03 35 to 49,12131,22.112650382792562,Python reference; SAS execution not verified
+age_group,04 50 to 64,12266,22.35873131607729,Python reference; SAS execution not verified
+age_group,05 65 and over,16889,30.785636164783085,Python reference; SAS execution not verified

@@ -1,0 +1,2 @@
+# Independent SQL cross-check only; core reference analysis uses Python stdlib.
+duckdb==1.5.5

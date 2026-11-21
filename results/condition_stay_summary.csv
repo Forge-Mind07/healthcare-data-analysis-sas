@@ -1,0 +1,7 @@
+condition,n,mean,median,std,minimum,maximum,source
+Arthritis,9207,15.50374714890844,15.0,8.607763553170292,1.0,30.0,Python reference; SAS execution not verified
+Asthma,9077,15.676104439792883,16.0,8.715672746044994,1.0,30.0,Python reference; SAS execution not verified
+Cancer,9121,15.510141431860541,15.0,8.669702436752772,1.0,30.0,Python reference; SAS execution not verified
+Diabetes,9197,15.429487876481462,15.0,8.658455268635532,1.0,30.0,Python reference; SAS execution not verified
+Hypertension,9131,15.435439710875041,15.0,8.63439396966522,1.0,30.0,Python reference; SAS execution not verified
+Obesity,9127,15.439465322669005,15.0,8.682395481580686,1.0,30.0,Python reference; SAS execution not verified

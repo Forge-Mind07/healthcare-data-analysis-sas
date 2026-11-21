@@ -1,0 +1,4 @@
+variable,n,mean,median,std,minimum,maximum,source
+age,54860,51.53384979948961,52.0,19.60529519030821,13.0,89.0,Python reference; SAS execution not verified
+hospital_stay_days,54860,15.498815165876778,15.0,8.661356828815878,1.0,30.0,Python reference; SAS execution not verified
+billing_amount,54860,25594.633636750525,25593.872999505955,14175.867041216467,9.238787497393332,52764.276736469175,Python reference; SAS execution not verified

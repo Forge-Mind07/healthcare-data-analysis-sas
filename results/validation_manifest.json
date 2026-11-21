@@ -1,0 +1,67 @@
+{
+  "source_file_sha256": "d8c23c7dddaf0e1f5daf26182eb908c219d28a63bb574377c3ba6cb09be8a342",
+  "source_bytes": 8399221,
+  "original_n": 55500,
+  "original_variables": 15,
+  "duplicate_n": 534,
+  "unique_n": 54966,
+  "cleaned_n": 54860,
+  "negative_raw_n": 108,
+  "negative_unique_n": 106,
+  "negative_duplicate_overlap_n": 2,
+  "emergency_or_urgent_n": 36423,
+  "emergency_or_urgent_percent": 66.39263580021874,
+  "reference_engine": "Python standard library csv, Decimal, datetime, statistics",
+  "sas_execution_status": "NOT EXECUTED",
+  "raw_data_distributed": false,
+  "summary": [
+    {
+      "variable": "age",
+      "n": 54860,
+      "mean": 51.53384979948961,
+      "median": 52.0,
+      "std": 19.60529519030821,
+      "minimum": 13.0,
+      "maximum": 89.0,
+      "source": "Python reference; SAS execution not verified"
+    },
+    {
+      "variable": "hospital_stay_days",
+      "n": 54860,
+      "mean": 15.498815165876778,
+      "median": 15.0,
+      "std": 8.661356828815878,
+      "minimum": 1.0,
+      "maximum": 30.0,
+      "source": "Python reference; SAS execution not verified"
+    },
+    {
+      "variable": "billing_amount",
+      "n": 54860,
+      "mean": 25594.633636750525,
+      "median": 25593.872999505955,
+      "std": 14175.867041216467,
+      "minimum": 9.238787497393332,
+      "maximum": 52764.276736469175,
+      "source": "Python reference; SAS execution not verified"
+    }
+  ],
+  "highest_average_billing": {
+    "condition": "Obesity",
+    "n": 9127,
+    "mean": 25859.215373017254,
+    "median": 26200.51454469286,
+    "std": 14045.479682354708,
+    "minimum": 53.93144465760656,
+    "maximum": 52024.72644288463,
+    "source": "Python reference; SAS execution not verified"
+  },
+  "highest_abnormal_percentage": {
+    "condition": "Arthritis",
+    "abnormal_n": 3153,
+    "denominator_n": 9207,
+    "abnormal_percent": 34.245682632779406,
+    "source": "Python reference; SAS execution not verified"
+  },
+  "clinical_interpretation": "Descriptive educational analysis only; no causal or treatment-effect claims"
+}
