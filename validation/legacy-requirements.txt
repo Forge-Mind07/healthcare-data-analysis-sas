@@ -1,0 +1,3 @@
+# Optional: reproduce privacy edits on the user-supplied historical HTML/SAS pair.
+lxml==6.1.1
+Pillow==13.0.0

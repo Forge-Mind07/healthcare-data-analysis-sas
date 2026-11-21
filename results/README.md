@@ -1,6 +1,6 @@
 # Independent reference results
 
-Every CSV in this directory was actually generated from the complete supplied CSV by `validation/reference_analysis.py`. Numeric results were independently recomputed with DuckDB by `validation/sql_crosscheck.py`. Each CSV includes a `source` field identifying it as reference output with SAS execution unverified.
+Every root-level CSV in this directory was actually generated from the complete supplied CSV by `validation/reference_analysis.py`. Numeric results were independently recomputed with DuckDB by `validation/sql_crosscheck.py`. Each CSV includes a `source` field identifying it as reference output with SAS execution unverified.
 
 These files are **not exported from SAS**. Actual SAS outputs, once run, go under ignored `results/sas/` and must be compared using `validation/compare_sas_outputs.py`.
 
@@ -28,3 +28,5 @@ These files are **not exported from SAS**. Actual SAS outputs, once run, go unde
 `raw_affected`, `unique_affected` and `duplicate_overlap` are separate populations, not numbers to add indiscriminately. For `original_observations`, these columns show raw N, unique N and duplicate-copy N. `exact_duplicates` has zero unique rows by definition. Final `cleaned_observations` is in `unique_affected`. Other issue rows overlap and are not additive.
 
 Full precision is retained in CSVs; documentation rounds displayed values. Billing has no asserted currency unit. SD uses N−1. The committed aggregates contain no patient names, doctors, hospitals, room numbers or individual date pairs.
+
+The `legacy/` subdirectory preserves a supplied, sanitized historical SAS report with a known date-parsing discrepancy. It is separate from these validated reference aggregates; see [legacy report notes](legacy/README.md).

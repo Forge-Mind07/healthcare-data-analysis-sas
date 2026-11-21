@@ -66,4 +66,4 @@ Reference CSVs retain unrounded values; README/tables round only for presentatio
 
 SAS modules must run through `sas/run_all.sas`. `results/sas/` and `visuals/sas/` are reserved for actual SAS output and ignored in Git. SAS logs and row-level WORK datasets are not published. A success receipt is written only after all included modules reach the end without a detected error; users must still inspect the full log and compare outputs.
 
-The committed outputs are independently generated reference results. SAS was unavailable and has not executed these programs. The named legacy SAS program was inaccessible, so migration from that unseen source is not yet verified. See [validation_status.md](validation_status.md).
+Root-level outputs are independently generated reference results. The revised modular SAS programs have not been executed here. The subsequently supplied historical SAS program and saved report have now been reviewed, with sanitized copies and a reproduced date-width discrepancy retained separately. See [legacy_program_review.md](legacy_program_review.md) and [validation_status.md](validation_status.md).

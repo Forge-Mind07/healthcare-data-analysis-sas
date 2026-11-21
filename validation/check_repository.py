@@ -27,7 +27,8 @@ def check_repository(root=ROOT):
     assert not list((root/'data').glob('*.csv')),'Patient-level CSV must stay outside publication set'
     assert not list(root.rglob('*.sas7bdat')),'Do not publish row-level SAS datasets'
     all_sas='\n'.join(p.read_text() for p in (root/'sas').glob('*.sas'))
-    assert not re.search(r'/home/|/mnt/|[A-Za-z]:\\',all_sas),'Machine-specific SAS path'
+    all_sas_paths='\n'.join(p.read_text() for p in (root/'sas').rglob('*.sas'))
+    assert not re.search(r'/home/|/mnt/|[A-Za-z]:\\',all_sas_paths),'Machine-specific SAS path'
     assert not re.search(r'\b(55500|54860|54966|25594\.63|25859\.22|34\.25)\b',all_sas),'Hardcoded analytical finding'
     driver=re.sub(r'/\*.*?\*/','',(root/'sas/run_all.sas').read_text(),flags=re.S)
     modules=re.findall(r'%include "&project_root/sas/([^";]+)"',driver)
@@ -76,6 +77,17 @@ def check_repository(root=ROOT):
                 assert sum(int(r['n']) for r in age_counts if low<=float(r['value'])<=high)==n
         else:raise AssertionError('Unexpected chart')
         if p.stem=='abnormal_test_results':assert chart['axis_maximum']==100
+    legacy=root/'results/legacy/report_audit.json'
+    if legacy.exists():
+        audit=json.loads(legacy.read_text())
+        public_html=root/'results/legacy/Healthcare_Analysis_SAS_Studio_FIXED-results.sanitized.html'
+        public_sas=root/'sas/legacy/Healthcare_Analysis_SAS_Studio_FIXED.sas'
+        assert hashlib.sha256(public_html.read_bytes()).hexdigest()==audit['public_html_sha256']
+        assert hashlib.sha256(public_sas.read_bytes()).hexdigest()==audit['public_program_sha256']
+        content=public_html.read_text()
+        assert not re.search(r'/home/|/saswork/|u\d{8}',content)
+        assert 'Historical SAS report with unresolved analytical discrepancy' in content
+        assert '<script' not in content.lower()
     receipt={'status':'PASS','local_markdown_links_checked':checked_links,
         'png_files_checked':len(chart_manifest['charts']),
         'checks':['local link targets','privacy publication scope','SAS include order',

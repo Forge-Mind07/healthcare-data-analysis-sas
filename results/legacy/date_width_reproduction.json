@@ -1,0 +1,14 @@
+{
+  "status": "REPRODUCED_SUPPLIED_REPORT_COUNTS",
+  "engine": "Python standard library",
+  "experiment": "Use only the first 9 characters of each YYYY-MM-DD date; zero day is invalid",
+  "invalid_stays": 28179,
+  "cleaned_records": 27004,
+  "mean_stay": 15.620574729669679,
+  "median_stay": 28.0,
+  "maximum_stay": 31,
+  "mean_billing": 25433.31722019538,
+  "source_file_sha256": "d8c23c7dddaf0e1f5daf26182eb908c219d28a63bb574377c3ba6cb09be8a342",
+  "sas_executed_by_this_check": false,
+  "conclusion": "Width truncation reproduces the observed invalid-stay and cleaned-row counts exactly"
+}

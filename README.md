@@ -2,7 +2,7 @@
 
 A **Base SAS 9.4 statistical programming portfolio project** demonstrating CSV ingestion, data validation, reproducible cleaning, descriptive statistics, grouped analysis and reporting. The project is designed to demonstrate foundational skills relevant to an Associate Statistical Programmer role.
 
-**Execution status:** the SAS programs have **not been executed** in this environment. The committed tables are independently generated Python reference outputs, verified using DuckDB SQL. The PNGs are independently generated reference charts, **not SAS output or screenshots**. See [validation status](docs/validation_status.md).
+**Execution status:** the revised modular SAS pipeline has **not been executed** in this environment. Root-level tables and PNGs are independently validated reference outputs, not SAS output. A supplied historical SAS 9.4 report is preserved separately under `results/legacy/`; it has a documented date-parsing discrepancy and is not final validated output. See [legacy program review](docs/legacy_program_review.md) and [validation status](docs/validation_status.md).
 
 ## Overview and problem statement
 
@@ -164,7 +164,7 @@ The original input SHA-256 is recorded in [validation_manifest.json](results/val
 - Currency, healthcare setting, severity, diagnostic criteria, clinical timing and test definitions are not provided.
 - Calendar-date differences measure elapsed days; no inclusive +1 adjustment or timestamp precision is implied.
 - No inferential tests, causal effects, clinical efficacy, safety or treatment-effect claims.
-- The supplied legacy script `Healthcare_Analysis_Base_SAS_9_4.sas` was not accessible during preparation. Its review and migration comparison remain pending; this modular implementation does not claim to have preserved unseen logic.
+- The supplied legacy SAS source and HTML report have been reviewed and preserved as sanitized historical artifacts. The report gives 27,004 cleaned records because of a reproduced date-width issue; it must not be substituted for the verified reference findings. See [legacy review](docs/legacy_program_review.md).
 - SAS execution and authenticated GitHub publication have not yet been verified.
 
 ## Skills demonstrated

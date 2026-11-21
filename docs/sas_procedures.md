@@ -1,6 +1,6 @@
 # SAS procedures and programming decisions
 
-The programs target SAS 9.4 syntax and conventional Base SAS procedures plus ODS Graphics. They were reviewed statically against SAS documentation but **not executed**. PROC SGPLOT/ODS Graphics availability must be verified in the user's SAS installation.
+The revised modular programs target SAS 9.4 syntax and conventional Base SAS procedures plus ODS Graphics. They were reviewed statically against SAS documentation but **not executed**. PROC SGPLOT/ODS Graphics availability must be verified in the user's SAS installation.
 
 | Procedure or feature | Module | Implementation and rationale |
 |---|---|---|

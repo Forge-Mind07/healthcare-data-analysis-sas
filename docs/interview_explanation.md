@@ -46,7 +46,7 @@ This establishes agreement of independent reference implementations. It does not
 
 ## Main limitations
 
-There is no reliable patient/visit ID, documented currency, severity, test definition or treatment timing. Local data provenance and redistribution permission are unresolved, so the patient-level CSV is omitted from the public file set. Counts describe records and cannot establish unique patients, efficacy, safety or causation. The original legacy SAS program could not be retrieved; review of that program remains a separate required migration step.
+There is no reliable patient/visit ID, documented currency, severity, test definition or treatment timing. Local data provenance and redistribution permission are unresolved, so the patient-level CSV is omitted from the public file set. Counts describe records and cannot establish unique patients, efficacy, safety or causation. The original legacy source and report have now been reviewed. Its default-width date parsing produced the wrong population; an independent truncation experiment reproduced that error and the revised modular code uses explicit date parsing. The revised SAS execution and log review remain pending.
 
 ## Three useful facts to remember
 

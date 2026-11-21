@@ -1,0 +1,31 @@
+{
+  "status": "LEGACY_REPORT_DISAGREES_WITH_REFERENCE",
+  "source_program_sha256": "ead2c387911d4a117a02fb169b501c0d48eca724f6e647a51acd6fd2f12894dc",
+  "source_html_sha256": "04eb1ce3b66f70e1d1c11dbe63e4e469fdeaa05251187b2ddccdfbe5b769e71e",
+  "public_program_sha256": "ac272b47c884e84feeebbe4a1c9ac6393d95c2e57d38dda676b77c477c315fd9",
+  "public_html_sha256": "6c52f71e7447b522404c21cc140ce82b0bb8c7e24c0b8f28d6bfd2d34c23a1bb",
+  "generator_metadata": "SAS 9.4",
+  "reported_reconciliation": {
+    "Original_Rows": 55500,
+    "Unique_Rows": 54966,
+    "Exact_Duplicates": 534,
+    "Negative_Bills_Original": 108,
+    "Negative_Bills_After_Dedup": 106,
+    "Clean_Rows": 27004
+  },
+  "reported_invalid_stays": 28179,
+  "expected_cleaned_records": 54860,
+  "report_chart_pixels_preserved": 3,
+  "sections_removed": [
+    "PROC CONTENTS including host paths",
+    "First five patient-level records"
+  ],
+  "source_changes": [
+    "CSV path configuration",
+    "Restricted non-identifying preview",
+    "Historical-status header"
+  ],
+  "analytical_logic_preserved": true,
+  "modular_pipeline_sas_execution": "NOT EXECUTED",
+  "limitations": "No original SAS execution log or runtime session supplied; report is not proof of successful validation"
+}

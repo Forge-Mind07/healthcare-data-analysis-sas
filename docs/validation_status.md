@@ -11,17 +11,19 @@
 - Five real reference PNG charts generated from those aggregates, with explicit non-SAS labels and source-series manifest.
 - SAS modules prepared in execution order with parameterized paths, raw/unique/clean counts and separate output locations.
 - Ten independent analytical-policy unit tests passed, including overlap/repeated visits, date and age boundaries, invalid values, denominator choice and source preservation. Receipt: `results/unit_validation.json`.
-- Nineteen local Markdown links and all five PNGs passed repository checks; chart-series values matched their source CSVs. All five images were also visually inspected.
+- Local Markdown links and all five reference PNGs passed repository checks; chart-series values matched their source CSVs. All five images were also visually inspected. The exact current link count is in `results/repository_validation.json`.
 
 Automated unit and repository checks are reproducible using the README commands. Their current execution receipt is recorded in `results/repository_validation.json` after successful execution; do not infer success before that file exists.
 
 ## SAS execution remains pending
 
-No SAS executable or authenticated SAS Studio session is available in this environment. SAS code has been reviewed statically; **it has not been compiled or executed**. There is no fabricated SAS log, SAS output image or SAS success claim.
+No SAS executable or authenticated SAS Studio session is available in this environment. The revised modular SAS pipeline has been reviewed statically but **has not been compiled or executed here**.
 
-The original `Healthcare_Analysis_Base_SAS_9_4.sas` was not found locally, and the supplied GitHub source URL could not be retrieved. The original-script review/improvement requirement is therefore incomplete. The modular programs were prepared from the project requirements and independently inspected CSV; they are not represented as a verified migration of unseen legacy code. When supplied, retain the original privately or under a clearly identified legacy folder only after a privacy/path review, compare each analysis and document the retained/revised logic.
+The user subsequently supplied `Healthcare_Analysis_SAS_Studio_FIXED.sas` and its saved SAS 9.4 HTML report. Both have now been reviewed. Publication-safe copies preserve the original analytical logic, aggregate tables and chart pixels while removing the machine-specific account path, patient preview and host metadata. Original file hashes and extracted report counts are recorded under `results/legacy/`.
 
-Actual next steps are to obtain the legacy source, review and reconcile it, run `sas/run_all.sas` in SAS Studio, inspect the full log, compare actual SAS CSVs and inspect actual SAS figures. The driver never overwrites root reference outputs.
+The historical report has an analytical discrepancy: 28,179 invalid stays and 27,004 cleaned records. A nine-character date-truncation experiment exactly reproduces those counts. The reviewed modular code uses explicit YYMMDD10. parsing to address it. See [legacy_program_review.md](legacy_program_review.md). The saved report is existing SAS run evidence, not proof of a successful validated run of the revised code; no original full SAS log was provided.
+
+Remaining execution steps are to run `sas/run_all.sas` in SAS Studio, inspect the complete log, compare actual SAS CSVs and inspect actual SAS figures. The driver never overwrites reference outputs or the historical report.
 
 ## Privacy and licensing
 
