@@ -50,11 +50,13 @@ Python standard-library calculations, Decimal billing arithmetic and independent
 5. Exclude unique records with invalid required analytical fields or negative billing. Negative bills may be legitimate credits/refunds; they are outside this **nonnegative-charge analysis**, not automatically classified as errors.
 6. Reconcile the overlapping exclusions and derive stay = discharge date − admission date. Same-day stays are permitted; stays over 365 days are flagged for review, not silently removed.
 
-The measured reconciliation is **55,500 − 534 − (108 − 2) = 54,860**. Two negative-billing copies are already included in the duplicate count. See [methodology](docs/methodology.md).
+The measured reconciliation is **55,500 − 534 − (108 − 2) = 54,860**: **640 distinct source rows are excluded**. Two negative-billing copies are already included in the duplicate count. These are the actual duplicate/billing exclusions. The historical **28,179 invalid stays and 27,004 cleaned rows were incorrect program-generated results**, not genuine date problems in the CSV. See [methodology](docs/methodology.md).
+
+The active pipeline retains date strings in explicit `$64` source fields, parses them with `YYMMDD10.` and checks ten-character lengths and exact ISO round trips on all original records. A [24-metric validation contract](validation/expected_counts.csv) halts SAS or reference processing if this source snapshot has unexpected counts, invalid dates, zero/negative stays or a stay range other than 1–30 days. All actual analytical values are still calculated; contract values are assertions only. [Observed-versus-expected results](results/expected_counts_validation.csv) are independently generated reference evidence, not evidence of a SAS runtime execution.
 
 ## Independently verified reference findings
 
-The following numbers were calculated from the complete local CSV, not hardcoded into analytical programs. Python and DuckDB agreed across **595 numerical or label comparisons** within documented tolerances.
+The following numbers were calculated from the complete local CSV, not hardcoded into analytical programs. Python and DuckDB agreed across **687 numerical or label comparisons** within documented tolerances.
 
 | Metric | Verified reference result |
 |---|---:|
@@ -63,8 +65,12 @@ The following numbers were calculated from the complete local CSV, not hardcoded
 | Negative-billing entries before deduplication | 108 |
 | Duplicate and negative-billing overlap | 2 |
 | Unique negative-billing entries excluded | 106 |
+| Total distinct source rows excluded | 640 |
 | Cleaned observations | 54,860 |
-| Missing cells / invalid dates / negative stays | 0 / 0 / 0 |
+| Missing original values | 0 |
+| Valid admission dates / valid discharge dates | 55,500 / 55,500 |
+| Invalid admission dates / invalid discharge dates | 0 / 0 |
+| Negative stays / zero-day stays | 0 / 0 |
 | Average age | 51.53 years |
 | Average / median hospital stay | 15.50 / 15 days |
 | Minimum / maximum hospital stay | 1 / 30 days |
@@ -128,6 +134,7 @@ healthcare-data-analysis-sas/
 
    The example path is a placeholder. Alternatively configure `SAS_PROJECT_ROOT` in the SAS server environment. No local machine path is embedded in the programs.
 4. The driver executes modules 01–06 in order. It writes actual SAS CSVs, an HTML report, a log and a completion receipt under `results/sas/`, and actual SAS PNGs under `visuals/sas/`. These ignored directories keep SAS outputs separate from the committed reference results. Row-level tables remain in WORK.
+   It also writes `expected_counts_validation.csv` with measured values and assertion status. Any failed assertion stops the run before descriptive analysis; do not alter the contract to make an unexplained mismatch pass.
 5. Inspect the full SAS log for errors, invalid data notes, truncation, conversion problems and unexpected missing values. A completion receipt alone is insufficient. Compare SAS CSVs with the references:
 
    ```bash
@@ -165,7 +172,7 @@ The original input SHA-256 is recorded in [validation_manifest.json](results/val
 - Calendar-date differences measure elapsed days; no inclusive +1 adjustment or timestamp precision is implied.
 - No inferential tests, causal effects, clinical efficacy, safety or treatment-effect claims.
 - The supplied legacy SAS source and HTML report have been reviewed and preserved as sanitized historical artifacts. The report gives 27,004 cleaned records because of a reproduced date-width issue; it must not be substituted for the verified reference findings. See [legacy review](docs/legacy_program_review.md).
-- SAS execution and authenticated GitHub publication have not yet been verified.
+- Corrected modular SAS runtime execution remains pending. Publication of the latest correction requires a successful normal push to the existing main branch.
 
 ## Skills demonstrated
 

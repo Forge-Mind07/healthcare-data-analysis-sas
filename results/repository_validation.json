@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "local_markdown_links_checked": 32,
+  "local_markdown_links_checked": 34,
   "png_files_checked": 5,
   "checks": [
     "local link targets",
@@ -9,7 +9,9 @@
     "no machine-specific SAS paths",
     "no hardcoded SAS findings",
     "population and percentage reconciliation",
-    "exact chart-to-CSV series"
+    "exact chart-to-CSV series",
+    "24 snapshot-specific counts and active SAS assertions",
+    "no default-width active date parsing"
   ],
   "sas_execution_status": "NOT EXECUTED",
   "note": "Static source review is not a SAS syntax/compiler check"

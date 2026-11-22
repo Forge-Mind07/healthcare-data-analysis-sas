@@ -30,6 +30,8 @@ def check_repository(root=ROOT):
     all_sas_paths='\n'.join(p.read_text() for p in (root/'sas').rglob('*.sas'))
     assert not re.search(r'/home/|/mnt/|[A-Za-z]:\\',all_sas_paths),'Machine-specific SAS path'
     assert not re.search(r'\b(55500|54860|54966|25594\.63|25859\.22|34\.25)\b',all_sas),'Hardcoded analytical finding'
+    active_sas = re.sub(r'/\*.*?\*/', '', all_sas, flags=re.S)
+    assert 'anydtdte' not in active_sas.lower(), 'Default-width date reparse in active SAS'
     driver=re.sub(r'/\*.*?\*/','',(root/'sas/run_all.sas').read_text(),flags=re.S)
     modules=re.findall(r'%include "&project_root/sas/([^";]+)"',driver)
     expected=[f'{i:02d}_{name}.sas' for i,name in enumerate(['import_and_inspection','data_validation',
@@ -43,6 +45,14 @@ def check_repository(root=ROOT):
     assert m['negative_raw_n']==m['negative_unique_n']+m['negative_duplicate_overlap_n']
     def rows(filename):
         with (root/'results'/filename).open(newline='') as stream:return list(csv.DictReader(stream))
+    with (root/'validation/expected_counts.csv').open(newline='') as f:
+        contract = {r['metric']: int(r['expected']) for r in csv.DictReader(f)}
+    checks = rows('expected_counts_validation.csv')
+    assert len(checks) == len(contract) == 24
+    for row in checks:
+        metric = row['metric']
+        assert row['status'] == 'PASS' and int(row['actual']) == contract[metric] == m[metric]
+        assert re.search(r'%assert_expected\(metric='+metric+r',actual=', active_sas), metric
     for name in ['condition_billing_summary.csv','condition_stay_summary.csv','admission_billing_summary.csv','age_group_stay_summary.csv']:
         assert sum(int(r['n']) for r in rows(name))==m['cleaned_n'],name
     for r in rows('abnormal_test_results.csv'):
@@ -92,7 +102,8 @@ def check_repository(root=ROOT):
         'png_files_checked':len(chart_manifest['charts']),
         'checks':['local link targets','privacy publication scope','SAS include order',
                   'no machine-specific SAS paths','no hardcoded SAS findings',
-                  'population and percentage reconciliation','exact chart-to-CSV series'],
+                  'population and percentage reconciliation','exact chart-to-CSV series',
+                  '24 snapshot-specific counts and active SAS assertions','no default-width active date parsing'],
         'sas_execution_status':'NOT EXECUTED', 'note':'Static source review is not a SAS syntax/compiler check'}
     (root/'results/repository_validation.json').write_text(json.dumps(receipt,indent=2)+'\n')
     return receipt

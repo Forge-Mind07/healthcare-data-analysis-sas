@@ -41,9 +41,16 @@ Minus exact duplicate copies                534
 Unique records                           54,966
 Minus excluded unique negative bills        106
 Analysis records                         54,860
+Distinct source rows excluded               640
 ```
 
-The SAS driver checks both conservation identities using observed counts rather than embedded expected values. The independent analysis calculates the same reconciliation from scratch.
+The SAS driver checks both conservation identities using observed counts and then compares those observations against the separate 24-metric `validation/expected_counts.csv` contract. The contract pins this audited snapshot; it does not populate analytical results. It requires 55,500 records, 15 source variables, 534 duplicate copies, 108 raw negative bills, two overlapping duplicate copies, 106 remaining exclusions, 640 distinct removed source rows and 54,860 cleaned records.
+
+It additionally asserts zero missing cells, zero invalid dates, zero negative or zero-day stays, 55,500 valid admission dates, 55,500 valid discharge dates, ten-character minimum/maximum date strings and a raw-source stay range of 1–30 days. These assertions run before cleaning can hide a conversion issue. A mismatch exports the available SAS assertion results and halts execution. The independent Python CLI validates the same contract before writing analytical files; DuckDB independently recomputes every contract metric.
+
+Zero-day stays remain allowed by the generic eligibility function, but none exists in this audited file: its snapshot contract therefore rejects any unexpected zero-day stay. This distinguishes a general policy from a regression check on the current source. Using a different source requires an independent audit and a deliberate contract revision.
+
+The archived report's 28,179 invalid stays and 27,004 cleaned records are incorrect results of the prior date conversion. They are not source-data defects and are never added to the valid duplicate/billing exclusion counts. Both the historical report and archived script remain byte-for-byte unchanged by this correction.
 
 ## Derived variables and statistics
 
@@ -58,7 +65,7 @@ The SAS driver checks both conservation identities using observed counts rather 
 
 The first implementation uses Python's CSV reader, exact original-field tuples, Decimal for billing arithmetic, datetime dates and statistics for descriptive summaries. A separate DuckDB implementation reads the original CSV as VARCHAR, deduplicates using SELECT DISTINCT and independently computes eligibility, date differences and grouped statistics. It does not read Python's cleaned rows.
 
-The completed SQL check performed 595 numerical or label comparisons. Floating-point comparisons allow relative tolerance 1e-11 or absolute tolerance 1e-7. These tolerances recognize numerical arithmetic differences without permitting materially different results. SAS CSV comparison allows relative tolerance 1e-10 or absolute tolerance 1e-6 for export rounding. Neither tolerance is a substitute for reconciling populations and denominators.
+The completed SQL check performed 687 numerical or label comparisons. Floating-point comparisons allow relative tolerance 1e-11 or absolute tolerance 1e-7. These tolerances recognize numerical arithmetic differences without permitting materially different results. SAS CSV comparison allows relative tolerance 1e-10 or absolute tolerance 1e-6 for export rounding. Neither tolerance is a substitute for reconciling populations and denominators.
 
 Reference CSVs retain unrounded values; README/tables round only for presentation. Input-series manifests tie charts to actual calculated aggregates. Axis baselines and age/stay count reconciliation are checked.
 

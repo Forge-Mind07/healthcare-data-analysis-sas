@@ -31,7 +31,7 @@ PROC SQL's aggregate HAVING comparison displays all conditions tied for the maxi
 
 ## Runtime controls and review
 
-The driver checks module error status and row-count conservation, and rejects an empty input or empty cleaned population. Expected observed values are not pipeline assertions: a legitimate new source should calculate its own counts. Validation receipts use a source fingerprint so outputs cannot be silently mixed across files.
+The driver checks module error status, row-count conservation and all 24 assertions in `validation/expected_counts.csv`. Counts, missingness, valid dates, exact ten-character date lengths, zero/negative stays and the 1–30 day range must match the independently audited snapshot. A failed assertion writes the available comparison rows and stops execution. Expected values are validation inputs only; numerical findings always come from the actual data. A different source requires a new audit and deliberate contract revision. Validation receipts also use a source fingerprint so outputs cannot be silently mixed across files.
 
 Review the real SAS log for ERROR, WARNING, uninitialized-variable messages, invalid data notes, character truncation and unexpected implicit conversions. A static text review cannot establish successful SAS syntax, environment compatibility or numerical agreement.
 

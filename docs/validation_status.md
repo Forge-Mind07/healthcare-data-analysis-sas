@@ -7,10 +7,10 @@
 - Original source file unchanged and excluded from the Git publication set.
 - Original-field duplicate, issue-overlap and inclusion accounting independently calculated.
 - Reference CSVs generated with Python standard-library arithmetic and date handling.
-- Separate DuckDB SQL implementation recalculated raw-source results and passed 595 numerical/label comparisons; receipt: `results/sql_validation.json`.
+- Separate DuckDB SQL implementation recalculated raw-source results and passed 687 numerical/label comparisons; receipt: `results/sql_validation.json`.
 - Five real reference PNG charts generated from those aggregates, with explicit non-SAS labels and source-series manifest.
-- SAS modules prepared in execution order with parameterized paths, raw/unique/clean counts and separate output locations.
-- Ten independent analytical-policy unit tests passed, including overlap/repeated visits, date and age boundaries, invalid values, denominator choice and source preservation. Receipt: `results/unit_validation.json`.
+- All seven active SAS files and the archived historical script reviewed. Active date parsing uses explicit YYMMDD10. with $64 source fields; all 24 snapshot checks halt on unexpected values. The archived script/report remain unchanged.
+- Fourteen independent analytical-policy unit tests passed, including overlap/repeated visits, date and age boundaries, invalid values, denominator choice and source preservation. Receipt: `results/unit_validation.json`.
 - Local Markdown links and all five reference PNGs passed repository checks; chart-series values matched their source CSVs. All five images were also visually inspected. The exact current link count is in `results/repository_validation.json`.
 
 Automated unit and repository checks are reproducible using the README commands. Their current execution receipt is recorded in `results/repository_validation.json` after successful execution; do not infer success before that file exists.
@@ -35,6 +35,6 @@ Code and documentation are MIT licensed. No third-party data license is asserted
 
 Target repository: `Forge-Mind07/healthcare-data-analysis-sas`.
 
-The GitHub CLI is not installed, terminal DNS/network access is restricted, and no authenticated GitHub connection was available when preparing the repository. The linked legacy repository and the target repository could not be inspected, so their existence/content is **unverified**, not assumed absent. No force push or overwrite was attempted.
+The existing public repository and main branch were observed through the read-only GitHub web page on 22 November 2026. The local checkout contains the two previously prepared commits. The GitHub CLI is now installed and an account is configured, but terminal DNS resolution for github.com/api.github.com fails and gh cannot validate its authentication. Fetch/push and synchronization of the remote tip are therefore not verified. No force push or overwrite was attempted.
 
-The local repository can be reviewed and committed without disclosing patient-level data. `scripts/publish.sh` provides a conservative authenticated-CLI path: it creates a new public repository only after an authenticated 404, and stops for manual inspection if an existing repository contains work. Resume publication after authorized GitHub access is available; do not claim the target URL is live until remote files and commit are checked.
+This correction is intended for the existing main branch using a normal git push, never a force push. The initial repository-creation helper remains unchanged and stops when it finds existing work. After terminal network/authentication access is restored, fetch and inspect origin/main, then push the correction and verify the remote commit. The public repository exists; publication of this latest correction remains unverified until that succeeds.

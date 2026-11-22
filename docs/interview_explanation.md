@@ -40,13 +40,13 @@ For each condition, the numerator is the number of records labeled Abnormal and 
 
 ## How the results were validated
 
-I read the complete CSV with Python's CSV module, used exact original-field tuples for duplicate detection, Decimal for billing calculations and datetime for dates. A separate DuckDB implementation read the raw CSV independently and recomputed deduplication, inclusion rules, missingness, category counts and grouped results. It agreed across 595 numerical or label comparisons within recorded tolerances. Chart series were saved and checked against those results.
+I read the complete CSV with Python's CSV module, used exact original-field tuples for duplicate detection, Decimal for billing calculations and datetime for dates. A separate DuckDB implementation read the raw CSV independently and recomputed deduplication, inclusion rules, missingness, category counts and grouped results. It agreed across 687 numerical or label comparisons within recorded tolerances. Chart series were saved and checked against those results.
 
 This establishes agreement of independent reference implementations. It does not prove the SAS program has run. The next SAS step is to run the driver, review the complete log and use the supplied CSV comparison script against actual SAS outputs.
 
 ## Main limitations
 
-There is no reliable patient/visit ID, documented currency, severity, test definition or treatment timing. Local data provenance and redistribution permission are unresolved, so the patient-level CSV is omitted from the public file set. Counts describe records and cannot establish unique patients, efficacy, safety or causation. The original legacy source and report have now been reviewed. Its default-width date parsing produced the wrong population; an independent truncation experiment reproduced that error and the revised modular code uses explicit date parsing. The revised SAS execution and log review remain pending.
+There is no reliable patient/visit ID, documented currency, severity, test definition or treatment timing. Local data provenance and redistribution permission are unresolved, so the patient-level CSV is omitted from the public file set. Counts describe records and cannot establish unique patients, efficacy, safety or causation. The original legacy source and report have now been reviewed. Its default-width date parsing produced the wrong population; an independent truncation experiment reproduced that error and the revised modular code uses explicit date parsing. The revised pipeline now asserts all verified snapshot counts, including zero invalid dates/stays and 640 distinct removed source rows. Its actual SAS execution and log review remain pending.
 
 ## Three useful facts to remember
 

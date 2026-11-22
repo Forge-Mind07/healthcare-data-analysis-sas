@@ -148,12 +148,64 @@ def write_csv(path: Path, rows: list[dict]) -> None:
         writer.writerows(rows)
 
 
-def analyze(path: Path, output: Path) -> dict:
+def population_metrics(rows, clean, unique, duplicates) -> dict:
+    raw_flags = [flags(row)[0] for row in rows]
+    durations = [flags(row)[1]['hospital_stay_days'] for row in rows]
+    valid_durations = [v for v in durations if v is not None]
+    return {
+        'original_n': len(rows), 'original_variables': len(HEADERS),
+        'duplicate_n': len(duplicates), 'unique_n': len(unique),
+        'negative_raw_n': sum(f['negative_billing'] for f in raw_flags),
+        'negative_duplicate_overlap_n': sum(flags(r)[0]['negative_billing'] for r in duplicates),
+        'negative_unique_n': sum(flags(r)[0]['negative_billing'] for r in unique),
+        'excluded_unique_n': len(unique)-len(clean),
+        'missing_cells_n': sum(not v for row in rows for v in row.values()),
+        'missing_records_n': sum(f['any_missing'] for f in raw_flags),
+        'valid_admission_dates_n': sum(not f['invalid_admission_date'] for f in raw_flags),
+        'valid_discharge_dates_n': sum(not f['invalid_discharge_date'] for f in raw_flags),
+        'invalid_admission_dates_n': sum(f['invalid_admission_date'] for f in raw_flags),
+        'invalid_discharge_dates_n': sum(f['invalid_discharge_date'] for f in raw_flags),
+        'admission_text_length_min': min(len(r['Date of Admission']) for r in rows),
+        'admission_text_length_max': max(len(r['Date of Admission']) for r in rows),
+        'discharge_text_length_min': min(len(r['Discharge Date']) for r in rows),
+        'discharge_text_length_max': max(len(r['Discharge Date']) for r in rows),
+        'negative_stays_n': sum(f['invalid_stay'] for f in raw_flags),
+        'zero_day_stays_n': sum(f['zero_day_stay'] for f in raw_flags),
+        'stay_min_days': min(valid_durations, default=None),
+        'stay_max_days': max(valid_durations, default=None),
+        'total_distinct_excluded_n': len(rows)-len(clean), 'cleaned_n': len(clean),
+    }
+
+
+def validate_expected_counts(metrics: dict, contract: Path) -> list[dict]:
+    with contract.open(newline='') as stream:
+        expected_rows = list(csv.DictReader(stream))
+    keys = [row['metric'] for row in expected_rows]
+    if len(keys) != len(set(keys)) or set(keys) != set(metrics):
+        raise ValueError('Expected-count contract must define each measured population metric exactly once')
+    report = [{'metric': row['metric'], 'actual': metrics[row['metric']],
+               'expected': int(row['expected']),
+               'status': 'PASS' if metrics[row['metric']] == int(row['expected']) else 'FAIL',
+               'source': SOURCE} for row in expected_rows]
+    failed = [row for row in report if row['status'] != 'PASS']
+    if failed:
+        raise ValueError('Source snapshot validation failed: ' + '; '.join(
+            f"{row['metric']} actual={row['actual']} expected={row['expected']}" for row in failed))
+    return report
+
+
+def analyze(path: Path, output: Path, expected_counts: Path | None = None) -> dict:
     rows = read_rows(path)
     clean, unique, duplicates = clean_rows(rows)
     if not clean:
         raise ValueError("No eligible observations; no analytical outputs produced")
+    metrics = population_metrics(rows, clean, unique, duplicates)
+    # Validate before writing any analytical files; expected values never replace
+    # measured values. Unit fixtures can omit this snapshot-specific contract.
+    checks = validate_expected_counts(metrics, expected_counts) if expected_counts is not None else None
     output.mkdir(parents=True, exist_ok=True)
+    if checks is not None:
+        write_csv(output/'expected_counts_validation.csv', checks)
     issue_names = list(flags(rows[0])[0])
     quality = []
     for issue in issue_names:
@@ -167,6 +219,7 @@ def analyze(path: Path, output: Path) -> dict:
         ("exact_duplicates", len(duplicates), 0, len(duplicates)),
         ("excluded_unique_records", 0, len(unique)-len(clean), 0),
         ("cleaned_observations", 0, len(clean), 0),
+        ("total_distinct_excluded_records", len(rows)-len(clean), len(unique)-len(clean), len(duplicates)),
     ]:
         quality.append({"check": check, "raw_affected": raw, "unique_affected": uniq,
                         "duplicate_overlap": overlap, "source": SOURCE})
@@ -214,11 +267,8 @@ def analyze(path: Path, output: Path) -> dict:
                   for value,count in sorted(Counter(r[key] for r in clean).items())])
     urgent_emergency = sum(r["admission_type"] in {"Urgent","Emergency"} for r in clean)
     manifest = {"source_file_sha256":hashlib.sha256(path.read_bytes()).hexdigest(),
-        "source_bytes":path.stat().st_size,"original_n":len(rows),"original_variables":len(HEADERS),
-        "duplicate_n":len(duplicates),"unique_n":len(unique),"cleaned_n":len(clean),
-        "negative_raw_n":sum(flags(r)[0]["negative_billing"] for r in rows),
-        "negative_unique_n":sum(flags(r)[0]["negative_billing"] for r in unique),
-        "negative_duplicate_overlap_n":sum(flags(r)[0]["negative_billing"] for r in duplicates),
+        "source_bytes":path.stat().st_size, **metrics,
+        "expected_counts_status": 'PASS' if checks is not None else 'NOT REQUESTED',
         "emergency_or_urgent_n":urgent_emergency,"emergency_or_urgent_percent":urgent_emergency/len(clean)*100,
         "reference_engine":"Python standard library csv, Decimal, datetime, statistics",
         "sas_execution_status":"NOT EXECUTED", "raw_data_distributed":False,
@@ -233,7 +283,8 @@ if __name__ == "__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input",type=Path,required=True)
     parser.add_argument("--output",type=Path,default=ROOT/"results")
+    parser.add_argument("--expected-counts",type=Path,default=ROOT/'validation/expected_counts.csv')
     args=parser.parse_args()
-    result=analyze(args.input,args.output)
+    result=analyze(args.input,args.output,args.expected_counts)
     print(json.dumps({k:result[k] for k in ["original_n","duplicate_n","negative_raw_n",
         "negative_duplicate_overlap_n","cleaned_n","emergency_or_urgent_percent","sas_execution_status"]},indent=2))

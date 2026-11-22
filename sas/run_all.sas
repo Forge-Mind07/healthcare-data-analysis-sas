@@ -65,12 +65,59 @@ ods graphics on / reset=all imagefmt=png width=9in height=5.5in;
     %end;
 %mend;
 
+/* Snapshot-specific expectations are validation inputs, never analytical values.
+   All actual counts are computed from the CSV. A mismatch halts this portfolio
+   run instead of silently excluding records affected by a parsing regression. */
+data work.expected_counts;
+    length metric $40;
+    infile "&project_root/validation/expected_counts.csv" dsd firstobs=2 truncover;
+    input metric :$40. expected :best32.;
+run;
+%check_step(expected_counts_contract);
+proc sql noprint;
+    select count(*),count(distinct metric),sum(missing(expected))
+    into :n_contract_rows trimmed,:n_contract_metrics trimmed,:n_contract_missing trimmed
+    from work.expected_counts;
+quit;
+%assert_equal(actual=&n_contract_rows,expected=24,label=contract_row_count);
+%assert_equal(actual=&n_contract_metrics,expected=24,label=contract_unique_metrics);
+%assert_equal(actual=&n_contract_missing,expected=0,label=contract_missing_values);
+data work.expected_validation;
+    length metric $40 status $8 source $80;
+    length actual expected 8;
+    stop;
+run;
+%macro assert_expected(metric=,actual=);
+    %local expected_n expected_value validation_status;
+    proc sql noprint;
+        select count(*) into :expected_n trimmed from work.expected_counts
+        where metric="&metric" and not missing(expected);
+    quit;
+    %assert_equal(actual=&expected_n,expected=1,label=contract_&metric);
+    proc sql noprint;
+        select expected into :expected_value trimmed from work.expected_counts
+        where metric="&metric";
+    quit;
+    %let validation_status=PASS;
+    %if %sysevalf(&actual ne &expected_value) %then %let validation_status=FAIL;
+    proc sql;
+        insert into work.expected_validation
+        values("&metric","&validation_status",'SAS',&actual,&expected_value);
+    quit;
+    %if &validation_status=FAIL %then %do;
+        %export_csv(data=work.expected_validation,name=expected_counts_validation);
+        %put ERROR: Snapshot assertion &metric failed: actual=&actual expected=&expected_value.;
+        %abort cancel;
+    %end;
+%mend;
+
 %include "&project_root/sas/01_import_and_inspection.sas";
 %check_step(import);
 %include "&project_root/sas/02_data_validation.sas";
 %check_step(validation);
 %include "&project_root/sas/03_data_cleaning.sas";
 %check_step(cleaning);
+%export_csv(data=work.expected_validation,name=expected_counts_validation);
 %include "&project_root/sas/04_descriptive_statistics.sas";
 %check_step(descriptive_statistics);
 %include "&project_root/sas/05_condition_analysis.sas";

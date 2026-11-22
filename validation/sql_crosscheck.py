@@ -67,7 +67,12 @@ def verify(input_path: Path, results: Path) -> dict:
     m=json.loads((results/'validation_manifest.json').read_text())
     if hashlib.sha256(input_path.read_bytes()).hexdigest()!=m['source_file_sha256']:
         raise AssertionError('Reference results refer to a different source file')
-    for key,query in {
+    columns=[r[1] for r in db.execute("PRAGMA table_info('raw')").fetchall()]
+    missing_predicates=[f'''("{c}" IS NULL OR "{c}"='')''' for c in columns]
+    admission="try_strptime(\"Date of Admission\", '%Y-%m-%d')"
+    discharge="try_strptime(\"Discharge Date\", '%Y-%m-%d')"
+    raw_stay=f"date_diff('day',{admission},{discharge})"
+    queries={
         'original_n':'SELECT count(*) FROM raw',
         'original_variables':"SELECT count(*) FROM pragma_table_info('raw')",
         'unique_n':'SELECT count(*) FROM unique_rows',
@@ -75,8 +80,38 @@ def verify(input_path: Path, results: Path) -> dict:
         'cleaned_n':'SELECT count(*) FROM clean',
         'negative_raw_n':'SELECT count(*) FROM raw WHERE try_cast("Billing Amount" AS DOUBLE)<0',
         'negative_unique_n':'SELECT count(*) FROM parsed WHERE bill_n<0',
+        'negative_duplicate_overlap_n':'''SELECT (SELECT count(*) FROM raw WHERE try_cast("Billing Amount" AS DOUBLE)<0)
+            -(SELECT count(*) FROM parsed WHERE bill_n<0)''',
+        'excluded_unique_n':'SELECT (SELECT count(*) FROM unique_rows)-(SELECT count(*) FROM clean)',
+        'missing_cells_n':'SELECT sum('+ '+'.join(f'CASE WHEN {p} THEN 1 ELSE 0 END' for p in missing_predicates)+') FROM raw',
+        'missing_records_n':'SELECT count(*) FROM raw WHERE '+' OR '.join(missing_predicates),
+        'valid_admission_dates_n':f'''SELECT count(*) FROM raw WHERE strftime({admission},'%Y-%m-%d')="Date of Admission"''',
+        'valid_discharge_dates_n':f'''SELECT count(*) FROM raw WHERE strftime({discharge},'%Y-%m-%d')="Discharge Date"''',
+        'invalid_admission_dates_n':f'''SELECT count(*) FROM raw WHERE NOT coalesce(strftime({admission},'%Y-%m-%d')="Date of Admission",false)''',
+        'invalid_discharge_dates_n':f'''SELECT count(*) FROM raw WHERE NOT coalesce(strftime({discharge},'%Y-%m-%d')="Discharge Date",false)''',
+        'admission_text_length_min':'SELECT min(length("Date of Admission")) FROM raw',
+        'admission_text_length_max':'SELECT max(length("Date of Admission")) FROM raw',
+        'discharge_text_length_min':'SELECT min(length("Discharge Date")) FROM raw',
+        'discharge_text_length_max':'SELECT max(length("Discharge Date")) FROM raw',
+        'negative_stays_n':f'SELECT count(*) FROM raw WHERE {raw_stay}<0',
+        'zero_day_stays_n':f'SELECT count(*) FROM raw WHERE {raw_stay}=0',
+        'stay_min_days':f'SELECT min({raw_stay}) FROM raw',
+        'stay_max_days':f'SELECT max({raw_stay}) FROM raw',
+        'total_distinct_excluded_n':'SELECT (SELECT count(*) FROM raw)-(SELECT count(*) FROM clean)',
         'emergency_or_urgent_n':'''SELECT count(*) FROM clean WHERE "Admission Type" IN ('Emergency','Urgent')''',
-    }.items(): equal(db.execute(query).fetchone()[0],m[key],key)
+    }
+    independently_measured={key:db.execute(query).fetchone()[0] for key,query in queries.items()}
+    for key,value in independently_measured.items():equal(value,m[key],key)
+    expectation_report=csvrows('expected_counts_validation.csv')
+    contract_path=ROOT/'validation/expected_counts.csv'
+    with contract_path.open(newline='') as stream:
+        contract={row['metric']:int(row['expected']) for row in csv.DictReader(stream)}
+    if len(expectation_report)!=len(contract):raise AssertionError('Incomplete expected-count report')
+    for row in expectation_report:
+        key=row['metric'];actual=independently_measured[key]
+        equal(actual,contract[key],'contract:'+key)
+        equal(actual,row['actual'],'contract-report:'+key)
+        equal('PASS',row['status'],'contract-status:'+key)
     equal(m['negative_raw_n']-m['negative_unique_n'],m['negative_duplicate_overlap_n'],'negative_overlap')
     for variable,column in [('age','age_n'),('hospital_stay_days','stay'),('billing_amount','bill_n')]:
         actual=db.execute(f'SELECT count({column}),avg({column}),median({column}),stddev_samp({column}),min({column}),max({column}) FROM clean').fetchone()
@@ -145,6 +180,10 @@ def verify(input_path: Path, results: Path) -> dict:
             for key,table in [('raw_affected','raw'),('unique_affected','unique_rows'),('duplicate_overlap','duplicate_rows')]:
                 n=db.execute(f"SELECT count(*) FROM {table} WHERE {predicates[e['check']]}").fetchone()[0]
                 equal(n,e[key],'quality:'+e['check']+':'+key)
+        elif e['check']=='total_distinct_excluded_records':
+            for col,metric in [('raw_affected','total_distinct_excluded_n'),
+                               ('unique_affected','excluded_unique_n'),('duplicate_overlap','duplicate_n')]:
+                equal(independently_measured[metric],e[col],'total-excluded:'+col)
     for var,col in [('age','age_n'),('hospital_stay_days','stay')]:
         compare(var+'_distribution.csv',f'SELECT {col} AS value,count(*) AS n FROM clean GROUP BY {col}',['value'])
     for col in expected_levels:

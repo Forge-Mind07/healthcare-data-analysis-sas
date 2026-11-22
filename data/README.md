@@ -17,6 +17,7 @@ An authorized user should obtain the dataset from its confirmed source, inspect 
 - The two supplied local CSV copies were byte-identical.
 - No missing original field values were found across all 832,500 cells.
 - Character case is preserved; no name normalization precedes duplicate detection.
+- All 55,500 admission strings and 55,500 discharge strings have exactly ten characters and valid YYYY-MM-DD dates. Raw-source durations range from 1 to 30 days, with zero negative or zero-day stays. The older report's invalid stays were caused by its date-parsing implementation.
 
 ## Variable dictionary
 

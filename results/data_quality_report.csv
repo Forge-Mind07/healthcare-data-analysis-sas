@@ -14,3 +14,4 @@ original_observations,55500,54966,534,Python reference; SAS execution not verifi
 exact_duplicates,534,0,534,Python reference; SAS execution not verified
 excluded_unique_records,0,106,0,Python reference; SAS execution not verified
 cleaned_observations,0,54860,0,Python reference; SAS execution not verified
+total_distinct_excluded_records,640,106,534,Python reference; SAS execution not verified

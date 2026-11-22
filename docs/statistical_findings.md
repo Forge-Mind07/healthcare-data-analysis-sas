@@ -10,7 +10,9 @@ All numerical results below are **independent reference results**, calculated on
 
 **Methodology:** Count all original records; compare all original fields for duplicate copies; flag missingness, invalid numbers/dates, negative billing/durations and unexpected categories. Deduplicate first, then exclude invalid required fields and negative bills. Compute sample-based descriptive statistics on the cleaned population.
 
-**Results:** 55,500 original observations, 15 variables, 534 duplicate copies, 108 raw negative bills and two duplicate/negative overlaps. After excluding 106 unique negative bills, 54,860 records remain. No missing original cells, invalid dates, negative durations or unexpected category values were observed.
+**Results:** 55,500 original observations, 15 variables, 534 duplicate copies, 108 raw negative bills and two duplicate/negative overlaps. After excluding 106 unique negative bills, 54,860 records remain; 640 distinct source rows are removed in total. All 55,500 admission dates and all 55,500 discharge dates preserve ten characters and pass exact ISO date validation. Missing original values, invalid dates, negative durations and zero-day stays are all zero. No unexpected category values were observed.
+
+The historical SAS report's 28,179 invalid stays and 27,004 cleaned records were incorrect results of the previous date-parsing program, not evidence of invalid dates in the CSV. That report remains preserved separately and unchanged. The corrected modular SAS pipeline must still be executed in SAS Studio before its own output can be verified.
 
 | Variable | N | Mean | Median | Sample SD | Minimum | Maximum |
 |---|---:|---:|---:|---:|---:|---:|

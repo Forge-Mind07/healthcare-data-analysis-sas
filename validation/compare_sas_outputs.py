@@ -19,6 +19,7 @@ KEYS={
     'age_group_stay_summary.csv':['age_group'],
     'frequency_tables.csv':['variable','level'],
     'missing_values.csv':['variable'],
+    'expected_counts_validation.csv':['metric'],
 }
 
 
@@ -43,6 +44,9 @@ def compare(sas_results: Path, reference: Path) -> dict:
                 if col in keys or col=='source':continue
                 a=actual[key].get(col)
                 if a is None:raise AssertionError(f'{filename}: missing column {col}')
+                if col == 'status':
+                    if a != 'PASS' or value != 'PASS':raise AssertionError(f'{filename}: failed snapshot check')
+                    continue
                 if value=='':
                     if a not in ('','.'):raise AssertionError(f'{filename}:{key}:{col}: expected missing')
                 elif not math.isclose(float(a),float(value),rel_tol=1e-10,abs_tol=1e-6):

@@ -17,6 +17,8 @@ data work.qc_raw work.qc_unique work.qc_duplicates;
         work.duplicate_raw(in=is_duplicate);
     age_n=input(Age,?? best32.);
     billing_n=input(Billing_Amount,?? best32.);
+    /* Read all ten characters directly from the $64 raw text fields. No
+       VVALUE, ANYDTDTE., $8 intermediate or implicit date conversion. */
     admission_date=input(Date_of_Admission,?? yymmdd10.);
     discharge_date=input(Discharge_Date,?? yymmdd10.);
     format admission_date discharge_date yymmdd10.;
@@ -99,6 +101,51 @@ proc sql;
     from work.missing_long group by variable;
 quit;
 %export_csv(data=work.missing_values,name=missing_values);
+
+/* Validate every original record, before cleaning can hide a conversion issue.
+   These assertions are specific to the independently audited source snapshot.
+   Generic zero-day/long-stay review flags remain unchanged. */
+proc sql noprint;
+    select count(*) into :n_unique trimmed from work.unique_raw;
+    select count(*) into :n_duplicates trimmed from work.duplicate_raw;
+    select coalesce(sum(negative_billing),0),coalesce(sum(any_missing),0),
+        coalesce(sum(invalid_admission_date),0),coalesce(sum(invalid_discharge_date),0),
+        coalesce(sum(invalid_stay),0),coalesce(sum(zero_day_stay),0),
+        min(hospital_stay_days),max(hospital_stay_days),
+        min(lengthn(Date_of_Admission)),max(lengthn(Date_of_Admission)),
+        min(lengthn(Discharge_Date)),max(lengthn(Discharge_Date))
+    into :n_negative_raw trimmed,:n_missing_records trimmed,
+        :n_bad_admission trimmed,:n_bad_discharge trimmed,
+        :n_negative_stays trimmed,:n_zero_stays trimmed,
+        :stay_min trimmed,:stay_max trimmed,
+        :admission_len_min trimmed,:admission_len_max trimmed,
+        :discharge_len_min trimmed,:discharge_len_max trimmed
+    from work.qc_raw;
+    select coalesce(sum(negative_billing),0) into :n_negative_unique trimmed from work.qc_unique;
+    select coalesce(sum(negative_billing),0) into :n_negative_overlap trimmed from work.qc_duplicates;
+    select coalesce(sum(missing_n),0) into :n_missing_cells trimmed from work.missing_values;
+quit;
+%let n_valid_admission=%eval(&n_original-&n_bad_admission);
+%let n_valid_discharge=%eval(&n_original-&n_bad_discharge);
+%assert_expected(metric=duplicate_n,actual=&n_duplicates);
+%assert_expected(metric=unique_n,actual=&n_unique);
+%assert_expected(metric=negative_raw_n,actual=&n_negative_raw);
+%assert_expected(metric=negative_duplicate_overlap_n,actual=&n_negative_overlap);
+%assert_expected(metric=negative_unique_n,actual=&n_negative_unique);
+%assert_expected(metric=missing_cells_n,actual=&n_missing_cells);
+%assert_expected(metric=missing_records_n,actual=&n_missing_records);
+%assert_expected(metric=valid_admission_dates_n,actual=&n_valid_admission);
+%assert_expected(metric=valid_discharge_dates_n,actual=&n_valid_discharge);
+%assert_expected(metric=invalid_admission_dates_n,actual=&n_bad_admission);
+%assert_expected(metric=invalid_discharge_dates_n,actual=&n_bad_discharge);
+%assert_expected(metric=admission_text_length_min,actual=&admission_len_min);
+%assert_expected(metric=admission_text_length_max,actual=&admission_len_max);
+%assert_expected(metric=discharge_text_length_min,actual=&discharge_len_min);
+%assert_expected(metric=discharge_text_length_max,actual=&discharge_len_max);
+%assert_expected(metric=negative_stays_n,actual=&n_negative_stays);
+%assert_expected(metric=zero_day_stays_n,actual=&n_zero_stays);
+%assert_expected(metric=stay_min_days,actual=&stay_min);
+%assert_expected(metric=stay_max_days,actual=&stay_max);
 title 'Raw data category review including missing levels';
 proc freq data=work.raw_text;
     tables Gender Blood_Type Medical_Condition Admission_Type Test_Results

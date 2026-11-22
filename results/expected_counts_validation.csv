@@ -1,0 +1,25 @@
+metric,actual,expected,status,source
+original_n,55500,55500,PASS,Python reference; SAS execution not verified
+original_variables,15,15,PASS,Python reference; SAS execution not verified
+duplicate_n,534,534,PASS,Python reference; SAS execution not verified
+unique_n,54966,54966,PASS,Python reference; SAS execution not verified
+negative_raw_n,108,108,PASS,Python reference; SAS execution not verified
+negative_duplicate_overlap_n,2,2,PASS,Python reference; SAS execution not verified
+negative_unique_n,106,106,PASS,Python reference; SAS execution not verified
+excluded_unique_n,106,106,PASS,Python reference; SAS execution not verified
+missing_cells_n,0,0,PASS,Python reference; SAS execution not verified
+missing_records_n,0,0,PASS,Python reference; SAS execution not verified
+valid_admission_dates_n,55500,55500,PASS,Python reference; SAS execution not verified
+valid_discharge_dates_n,55500,55500,PASS,Python reference; SAS execution not verified
+invalid_admission_dates_n,0,0,PASS,Python reference; SAS execution not verified
+invalid_discharge_dates_n,0,0,PASS,Python reference; SAS execution not verified
+admission_text_length_min,10,10,PASS,Python reference; SAS execution not verified
+admission_text_length_max,10,10,PASS,Python reference; SAS execution not verified
+discharge_text_length_min,10,10,PASS,Python reference; SAS execution not verified
+discharge_text_length_max,10,10,PASS,Python reference; SAS execution not verified
+negative_stays_n,0,0,PASS,Python reference; SAS execution not verified
+zero_day_stays_n,0,0,PASS,Python reference; SAS execution not verified
+stay_min_days,1,1,PASS,Python reference; SAS execution not verified
+stay_max_days,30,30,PASS,Python reference; SAS execution not verified
+total_distinct_excluded_n,640,640,PASS,Python reference; SAS execution not verified
+cleaned_n,54860,54860,PASS,Python reference; SAS execution not verified

@@ -20,6 +20,41 @@ def example(**updates):
 
 
 class AnalyticalPolicyTests(unittest.TestCase):
+    def test_ten_character_dates_preserve_day_across_month_and_leap_boundaries(self):
+        for start,end,days in [('2024-01-09','2024-01-10',1),('2024-01-31','2024-02-01',1),
+                               ('2024-02-28','2024-03-01',2),('2023-12-31','2024-01-01',1)]:
+            issue,derived=r.flags(example(**{'Date of Admission':start,'Discharge Date':end}))
+            self.assertFalse(issue['invalid_admission_date']);self.assertFalse(issue['invalid_discharge_date'])
+            self.assertEqual(derived['hospital_stay_days'],days)
+
+    def test_nine_character_legacy_truncations_and_non_iso_variants_are_rejected(self):
+        for value in ['2024-01-09'[:9],'2024-1-09','2024-01-9','20240109','2024-01-09extra']:
+            issue,_=r.flags(example(**{'Date of Admission':value}))
+            self.assertTrue(issue['invalid_admission_date'],value)
+
+    def test_snapshot_contract_halts_before_writing_analytical_outputs(self):
+        with tempfile.TemporaryDirectory() as directory:
+            source=Path(directory)/'source.csv';output=Path(directory)/'output'
+            with source.open('w',newline='') as f:
+                writer=csv.DictWriter(f,fieldnames=r.HEADERS);writer.writeheader();writer.writerow(example())
+            with self.assertRaisesRegex(ValueError,'original_n actual=1 expected=55500'):
+                r.analyze(source,output,ROOT/'validation/expected_counts.csv')
+            self.assertFalse(output.exists())
+
+    def test_snapshot_contract_rejects_invalid_dates_even_when_clean_count_is_unchanged(self):
+        original=[example(),example(**{'Billing Amount':'-20'})]
+        clean,unique,duplicates=r.clean_rows(original)
+        metrics=r.population_metrics(original,clean,unique,duplicates)
+        with tempfile.TemporaryDirectory() as directory:
+            contract=Path(directory)/'expected.csv'
+            with contract.open('w',newline='') as f:
+                writer=csv.writer(f);writer.writerow(['metric','expected']);writer.writerows(metrics.items())
+            changed=[original[0],{**original[1],'Date of Admission':'2024-01-0'}]
+            c,u,d=r.clean_rows(changed)
+            self.assertEqual(len(c),len(clean))
+            with self.assertRaisesRegex(ValueError,'invalid_admission_dates_n actual=1 expected=0'):
+                r.validate_expected_counts(r.population_metrics(changed,c,u,d),contract)
+
     def test_duplicate_negative_overlap_and_repeat_visits(self):
         negative=example(**{'Billing Amount':'-20'})
         second_visit=example(**{'Date of Admission':'2024-02-01','Discharge Date':'2024-02-04'})
